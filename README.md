@@ -2,7 +2,7 @@
 
 Veksti Meet is an open-source (Apache) WebRTC JavaScript application that uses [Jitsi Videobridge](https://jitsi.org/videobridge) to provide high quality, [secure](https://jitsi.org/security) and scalable video conferences. Veksti Meet in action can be seen at [here at the session #482 of the VoIP Users Conference](http://youtu.be/7vFUVClsNh0).
 
-The Veksti Meet client runs in your browser, without installing anything else on your computer. You can try it out at https://meet.jit.si.
+The Veksti Meet client runs in your browser, without installing anything else on your computer. You can try it out at https://meet.veksti.com.
 
 Veksti Meet allows very efficient collaboration. Users can stream their desktop or only some windows. It also supports shared document editing with Etherpad.
 
