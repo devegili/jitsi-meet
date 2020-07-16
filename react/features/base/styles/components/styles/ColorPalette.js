@@ -31,6 +31,10 @@ export const ColorPalette = {
     warning: 'rgb(215, 121, 118)',
     white: '#FFFFFF',
 
+    eerieBlack: '#1F1F1F',
+    jet: '#2F2F2F',
+    cultured: '#FAFAFA',
+
     /**
      * These are colors from the atlaskit to be used on mobile, when needed.
      *

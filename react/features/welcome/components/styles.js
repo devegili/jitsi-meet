@@ -10,7 +10,7 @@ export const SIDEBAR_AVATAR_SIZE = 100;
 
 const SIDEBAR_HEADER_HEIGHT = 150;
 
-export const SWITCH_THUMB_COLOR = ColorPalette.blueHighlight;
+export const SWITCH_THUMB_COLOR = ColorPalette.eerieBlack;
 
 export const SWITCH_UNDER_COLOR = 'rgba(0, 0, 0, 0.4)';
 
@@ -55,8 +55,8 @@ export default {
      * Join button style.
      */
     button: {
-        backgroundColor: ColorPalette.blue,
-        borderColor: ColorPalette.blue,
+        backgroundColor: ColorPalette.jet,
+        borderColor: ColorPalette.jet,
         borderRadius: 4,
         borderWidth: 1,
         height: 30,
@@ -174,7 +174,7 @@ export default {
      */
     reducedUIContainer: {
         alignItems: 'center',
-        backgroundColor: ColorPalette.blue,
+        backgroundColor: ColorPalette.jet,
         flex: 1,
         justifyContent: 'center'
     },
@@ -238,7 +238,7 @@ export default {
      * The icon in the side bar item touchables.
      */
     sideBarItemIcon: {
-        color: ColorPalette.blueHighlight,
+        color: ColorPalette.eerieBlack,
         fontSize: 20,
         marginRight: 15
     },
@@ -304,7 +304,7 @@ export default {
      * The style of the top-level container of {@code WelcomePage}.
      */
     welcomePage: {
-        backgroundColor: ColorPalette.blue,
+        backgroundColor: ColorPalette.jet,
         overflow: 'hidden'
     }
 };

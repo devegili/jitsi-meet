@@ -29,13 +29,13 @@ export default {
     },
     'Dialog': {
         border: 'rgba(0, 3, 6, 0.6)',
-        buttonBackground: ColorPalette.blue,
+        buttonBackground: ColorPalette.jet,
         buttonLabel: ColorPalette.white
     },
     'Header': {
-        background: ColorPalette.blue,
+        background: ColorPalette.jet,
         icon: ColorPalette.white,
-        statusBar: ColorPalette.blueHighlight,
+        statusBar: ColorPalette.eerieBlack,
         statusBarContent: ColorPalette.white,
         text: ColorPalette.white
     },
