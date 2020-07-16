@@ -72,9 +72,10 @@ class RecentList extends AbstractRecentList<Props> {
      * @inheritdoc
      */
     render() {
-        if (!isRecentListEnabled()) {
-            return null;
-        }
+        return null;
+        // if (!isRecentListEnabled()) {
+        //     return null;
+        // }
         const {
             disabled,
             t,
