@@ -140,7 +140,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { displayName, email, serverURL, startWithAudioMuted, startWithVideoMuted } = this.state;
+        const { displayName, /* email, serverURL, */ startWithAudioMuted, startWithVideoMuted } = this.state;
 
         return (
             <JitsiModal
@@ -162,7 +162,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             placeholder = 'John Doe'
                             value = { displayName } />
                     </FormRow>
-                    <FormRow
+                    {/* <FormRow
                         label = 'settingsView.email'
                         layout = 'column'>
                         <TextInput
@@ -172,10 +172,10 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             onChangeText = { this._onChangeEmail }
                             placeholder = 'email@example.com'
                             value = { email } />
-                    </FormRow>
+                    </FormRow> */}
                     <FormSectionHeader
                         label = 'settingsView.conferenceSection' />
-                    <FormRow
+                    {/* <FormRow
                         fieldSeparator = { true }
                         label = 'settingsView.serverURL'
                         layout = 'column'>
@@ -187,7 +187,7 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             onChangeText = { this._onChangeServerURL }
                             placeholder = { this.props._serverURL }
                             value = { serverURL } />
-                    </FormRow>
+                    </FormRow> */}
                     <FormRow
                         fieldSeparator = { true }
                         label = 'settingsView.startWithAudioMuted'>
@@ -208,9 +208,9 @@ class SettingsView extends AbstractSettingsView<Props, State> {
                             { `${AppInfo.version} build ${AppInfo.buildNumber}` }
                         </Text>
                     </FormRow>
-                    <FormSectionHeader
+                    {/* <FormSectionHeader
                         label = 'settingsView.advanced' />
-                    { this._renderAdvancedSettings() }
+                    { this._renderAdvancedSettings() } */}
                 </ScrollView>
             </JitsiModal>
         );

@@ -31,7 +31,6 @@ import {
     _mapStateToProps as _abstractMapStateToProps
 } from './AbstractWelcomePage';
 import LocalVideoTrackUnderlay from './LocalVideoTrackUnderlay';
-import VideoSwitch from './VideoSwitch';
 import WelcomePageLists from './WelcomePageLists';
 import WelcomePageSideBar from './WelcomePageSideBar';
 import styles, { PLACEHOLDER_TEXT_COLOR } from './styles';
@@ -272,6 +271,8 @@ class WelcomePage extends AbstractWelcomePage {
         const roomnameAccLabel = 'welcomepage.accessibilityLabel.roomname';
         const { _headerStyles, t } = this.props;
 
+        // import VideoSwitch from './VideoSwitch';
+
         return (
             <LocalVideoTrackUnderlay style = { styles.welcomePage }>
                 <View style = { _headerStyles.page }>
@@ -281,7 +282,7 @@ class WelcomePage extends AbstractWelcomePage {
                                 src = { IconMenu }
                                 style = { _headerStyles.headerButtonIcon } />
                         </TouchableOpacity>
-                        <VideoSwitch />
+                        {/* <VideoSwitch /> */}
                     </Header>
                     <SafeAreaView style = { styles.roomContainer } >
                         <View style = { styles.joinControls } >
