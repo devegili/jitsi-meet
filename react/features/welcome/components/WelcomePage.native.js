@@ -23,7 +23,7 @@ import {
 } from '../../base/tracks';
 import { HelpView } from '../../help';
 import { DialInSummary } from '../../invite';
-import { SettingsView } from '../../settings';
+import { SettingsView, DisplayNameField } from '../../settings';
 import { setSideBarVisible } from '../actions';
 
 import {
@@ -271,6 +271,8 @@ class WelcomePage extends AbstractWelcomePage {
         const roomnameAccLabel = 'welcomepage.accessibilityLabel.roomname';
         const { _headerStyles, t } = this.props;
 
+        const { displayName } = this.props._settings;
+
         // import VideoSwitch from './VideoSwitch';
 
         return (
@@ -286,6 +288,21 @@ class WelcomePage extends AbstractWelcomePage {
                     </Header>
                     <SafeAreaView style = { styles.roomContainer } >
                         <View style = { styles.joinControls } >
+                            <Text style = { styles.enterRoomText }>
+                                { t('settingsView.displayName') }
+                            </Text>
+                            <TextInput
+                                autoCapitalize = 'none'
+                                autoComplete = 'off'
+                                autoCorrect = { false }
+                                autoFocus = { false }
+                                onBlur = { this._onFieldBlur }
+                                onChangeText = { this._onDisplayNameChange }
+                                placeholderTextColor = { PLACEHOLDER_TEXT_COLOR }
+                                returnKeyType = { 'go' }
+                                style = { styles.textInput }
+                                underlineColorAndroid = 'transparent'
+                                value = { displayName } />
                             <Text style = { styles.enterRoomText }>
                                 { t('welcomepage.roomname') }
                             </Text>

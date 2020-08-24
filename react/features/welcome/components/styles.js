@@ -269,6 +269,7 @@ export default {
         color: TEXT_COLOR,
         fontSize: 23,
         height: 50,
+        marginBottom: 15,
         padding: 4,
         textAlign: 'center'
     },

@@ -7,6 +7,7 @@ import type { Dispatch } from 'redux';
 import { createWelcomePageEvent, sendAnalytics } from '../../analytics';
 import { appNavigate } from '../../app/actions';
 import isInsecureRoomName from '../../base/util/isInsecureRoomName';
+import { updateSettings } from '../../base/settings';
 import { isCalendarEnabled } from '../../calendar-sync';
 import { isRecentListEnabled } from '../../recent-list/functions';
 
@@ -107,6 +108,8 @@ export class AbstractWelcomePage extends Component<Props, *> {
             = this._animateRoomnameChanging.bind(this);
         this._onJoin = this._onJoin.bind(this);
         this._onRoomChange = this._onRoomChange.bind(this);
+        this._onDisplayNameChange = this._onDisplayNameChange.bind(this);
+        this._updateSettings = this._updateSettings.bind(this);
         this._renderInsecureRoomNameWarning = this._renderInsecureRoomNameWarning.bind(this);
         this._updateRoomname = this._updateRoomname.bind(this);
     }
@@ -226,6 +229,40 @@ export class AbstractWelcomePage extends Component<Props, *> {
             room: value,
             insecureRoomName: this.props._enableInsecureRoomNameWarning && value && isInsecureRoomName(value)
         });
+    }
+
+    _onDisplayNameChange: (string) => void;
+
+    /**
+     * Handles 'change' event for the display name text input field.
+     *
+     * @param {string} value - The text typed into the respective text input
+     * field.
+     * @protected
+     * @returns {void}
+     */
+    _onDisplayNameChange(value: string) {
+        this._updateSettings({
+            displayName: value
+        });
+
+        this.setState({
+            displayName: value
+        });
+    }
+
+    _updateSettings: (Object) => void;
+
+    /**
+     * Updates the persisted settings on any change.
+     *
+     * @param {Object} updateObject - The partial update object for the
+     * settings.
+     * @private
+     * @returns {void}
+     */
+    _updateSettings(updateObject: Object) {
+        this.props.dispatch(updateSettings(updateObject));
     }
 
     _renderInsecureRoomNameWarning: () => React$Component<any>;;

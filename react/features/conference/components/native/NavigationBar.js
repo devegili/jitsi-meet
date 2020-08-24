@@ -9,6 +9,7 @@ import { getFeatureFlag, CONFERENCE_TIMER_ENABLED, MEETING_NAME_ENABLED } from '
 import { connect } from '../../../base/redux';
 import { PictureInPictureButton } from '../../../mobile/picture-in-picture';
 import { isToolboxVisible } from '../../../toolbox';
+import ToggleCameraButton from '../../../toolbox/components/native/ToggleCameraButton';
 import ConferenceTimer from '../ConferenceTimer';
 
 import styles, { NAVBAR_GRADIENT_COLORS } from './styles';
@@ -66,6 +67,8 @@ class NavigationBar extends Component<Props> {
                 pointerEvents = 'box-none'
                 style = { styles.navBarWrapper }>
                 <PictureInPictureButton
+                    styles = { styles.navBarButton } />
+                <ToggleCameraButton
                     styles = { styles.navBarButton } />
                 <View
                     pointerEvents = 'box-none'

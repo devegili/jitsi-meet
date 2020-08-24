@@ -36,6 +36,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('veksti.keystore')
+            storePassword 'Veksti@JITSI/2020_APK'
+            keyAlias 'veksti'
+            keyPassword 'Veksti@JITSI/2020_APK'
+        }
     }
 
     buildTypes {
@@ -45,7 +51,7 @@ android {
         }
         release {
             // Uncomment the following line for singing a test release build.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-release.pro'
             buildConfigField "boolean", "GOOGLE_SERVICES_ENABLED", "${googleServicesEnabled}"
@@ -174,3 +180,4 @@ gradle.projectsEvaluated {
 if (googleServicesEnabled) {
     apply plugin: 'com.google.gms.google-services'
 }
+
