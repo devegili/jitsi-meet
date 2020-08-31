@@ -143,10 +143,14 @@ allprojects {
 
 ext {
     buildToolsVersion = "28.0.3"
-    compileSdkVersion = 29
+    compileSdkVersion = 30
     minSdkVersion    = 21
-    targetSdkVersion = 29
+    targetSdkVersion = 30
     supportLibVersion = "28.0.0"
+
+    react = [
+        nodeExecutableAndArgs:  ["/usr/local/bin/node"]
+    ]
 
     // The Maven artifact groupdId of the third-party react-native modules which
     // Veksti Meet SDK for Android depends on and which are not available in
