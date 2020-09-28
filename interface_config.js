@@ -259,12 +259,12 @@ var interfaceConfig = {
     /**
      * Specify mobile app scheme for opening the app from the mobile browser.
      */
-    APP_SCHEME: 'com.veksti.meet',
+    APP_SCHEME: 'org.jitsi.meet',
 
     /**
      * Specify the Android app package name.
      */
-    ANDROID_APP_PACKAGE: 'com.veksti.meet',
+    ANDROID_APP_PACKAGE: 'br.com.veksti.meet',
 
     /**
      * Override the behavior of some notifications to remain displayed until
