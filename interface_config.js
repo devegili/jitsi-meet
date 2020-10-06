@@ -106,7 +106,7 @@ var interfaceConfig = {
      */
     HIDE_INVITE_MORE_HEADER: true,
 
-    holisteInterface: true,
+    holisteInterface: false,
 
     INITIAL_TOOLBAR_TIMEOUT: 20000,
     JITSI_WATERMARK_LINK: 'https://veksti.com.br',
