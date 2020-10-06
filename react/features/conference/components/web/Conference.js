@@ -184,7 +184,8 @@ class Conference extends AbstractConference<Props, *> {
         const {
             // XXX The character casing of the name filmStripOnly utilized by
             // interfaceConfig is obsolete but legacy support is required.
-            filmStripOnly: filmstripOnly
+            filmStripOnly: filmstripOnly,
+            holisteInterface
         } = interfaceConfig;
         const {
             _iAmRecorder,
@@ -200,22 +201,22 @@ class Conference extends AbstractConference<Props, *> {
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
 
-                <Notice />
-                <Subject />
-                <InviteMore />
+                { holisteInterface || <Notice /> }
+                { holisteInterface || <Subject /> }
+                { holisteInterface || <InviteMore /> }
                 <div id = 'videospace'>
                     <LargeVideo />
-                    <KnockingParticipantList />
+                    { holisteInterface || <KnockingParticipantList />}
                     <Filmstrip filmstripOnly = { filmstripOnly } />
-                    { hideLabels || <Labels /> }
+                    { hideLabels || holisteInterface || <Labels /> }
                 </div>
 
                 { filmstripOnly || _showPrejoin || _isLobbyScreenVisible || <Toolbox /> }
-                { filmstripOnly || <Chat /> }
+                { filmstripOnly || holisteInterface || <Chat /> }
 
-                { this.renderNotificationsContainer() }
+                { holisteInterface || this.renderNotificationsContainer() }
 
-                <CalleeInfoContainer />
+                { holisteInterface || <CalleeInfoContainer />}
 
                 { !filmstripOnly && _showPrejoin && <Prejoin />}
             </div>
