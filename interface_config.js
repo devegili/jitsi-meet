@@ -1,292 +1,293 @@
-/* eslint-disable no-unused-vars, no-var, max-len */
-/* eslint sort-keys: ["error", "asc", {"caseSensitive": false}] */
+// @flow
 
-var interfaceConfig = {
-    APP_NAME: 'Veksti Meet',
-    AUDIO_LEVEL_PRIMARY_COLOR: 'rgba(255,255,255,0.4)',
-    AUDIO_LEVEL_SECONDARY_COLOR: 'rgba(255,255,255,0.2)',
+import _ from 'lodash';
+import React from 'react';
 
-    /**
-     * A UX mode where the last screen share participant is automatically
-     * pinned. Valid values are the string "remote-only" so remote participants
-     * get pinned but not local, otherwise any truthy value for all participants,
-     * and any falsy value to disable the feature.
-     *
-     * Note: this mode is experimental and subject to breakage.
-     */
-    AUTO_PIN_LATEST_SCREEN_SHARE: 'remote-only',
-    BRAND_WATERMARK_LINK: '',
+import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
+import { getConferenceNameForTitle } from '../../../base/conference';
+import { connect, disconnect } from '../../../base/connection';
+import { translate } from '../../../base/i18n';
+import { connect as reactReduxConnect } from '../../../base/redux';
+import { Chat } from '../../../chat';
+import { Filmstrip } from '../../../filmstrip';
+import { CalleeInfoContainer } from '../../../invite';
+import { LargeVideo } from '../../../large-video';
+import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
+import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
+import {
+    Toolbox,
+    fullScreenChanged,
+    setToolboxAlwaysVisible,
+    showToolbox
+} from '../../../toolbox';
+import { LAYOUTS, getCurrentLayout } from '../../../video-layout';
+import { maybeShowSuboptimalExperienceNotification } from '../../functions';
+import {
+    AbstractConference,
+    abstractMapStateToProps
+} from '../AbstractConference';
+import type { AbstractProps } from '../AbstractConference';
 
-    CLOSE_PAGE_GUEST_HINT: false, // A html text to be shown to guests on the close page, false disables it
-    /**
-     * Whether the connection indicator icon should hide itself based on
-     * connection strength. If true, the connection indicator will remain
-     * displayed while the participant has a weak connection and will hide
-     * itself after the CONNECTION_INDICATOR_HIDE_TIMEOUT when the connection is
-     * strong.
-     *
-     * @type {boolean}
-     */
-    CONNECTION_INDICATOR_AUTO_HIDE_ENABLED: true,
+import InviteMore from './InviteMore';
+import Labels from './Labels';
+import { default as Notice } from './Notice';
+import { default as Subject } from './Subject';
 
-    /**
-     * How long the connection indicator should remain displayed before hiding.
-     * Used in conjunction with CONNECTION_INDICATOR_AUTOHIDE_ENABLED.
-     *
-     * @type {number}
-     */
-    CONNECTION_INDICATOR_AUTO_HIDE_TIMEOUT: 5000,
+declare var APP: Object;
+declare var config: Object;
+declare var interfaceConfig: Object;
 
-    /**
-     * If true, hides the connection indicators completely.
-     *
-     * @type {boolean}
-     */
-    CONNECTION_INDICATOR_DISABLED: false,
+/**
+ * DOM events for when full screen mode has changed. Different browsers need
+ * different vendor prefixes.
+ *
+ * @private
+ * @type {Array<string>}
+ */
+const FULL_SCREEN_EVENTS = [
+    'webkitfullscreenchange',
+    'mozfullscreenchange',
+    'fullscreenchange'
+];
 
-    DEFAULT_BACKGROUND: '#000000',
-    DEFAULT_LOCAL_DISPLAY_NAME: 'Eu',
-    DEFAULT_LOGO_URL: 'images/watermark.png',
-    DEFAULT_REMOTE_DISPLAY_NAME: 'Convidado',
-
-    DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
-
-    DISABLE_FOCUS_INDICATOR: true,
-
-    /**
-     * If true, notifications regarding joining/leaving are no longer displayed.
-     */
-    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-
-    /**
-     * If true, presence status: busy, calling, connected etc. is not displayed.
-     */
-    DISABLE_PRESENCE_STATUS: true,
-
-    /**
-     * Whether the ringing sound in the call/ring overlay is disabled. If
-     * {@code undefined}, defaults to {@code false}.
-     *
-     * @type {boolean}
-     */
-    DISABLE_RINGING: false,
-
-    /**
-     * Whether the speech to text transcription subtitles panel is disabled.
-     * If {@code undefined}, defaults to {@code false}.
-     *
-     * @type {boolean}
-     */
-    DISABLE_TRANSCRIPTION_SUBTITLES: true,
-
-    /**
-     * Whether or not the blurred video background for large video should be
-     * displayed on browsers that can support it.
-     */
-    DISABLE_VIDEO_BACKGROUND: true,
-
-    DISPLAY_WELCOME_PAGE_CONTENT: true,
-    DISPLAY_WELCOME_PAGE_TOOLBAR_ADDITIONAL_CONTENT: false,
-
-    ENABLE_DIAL_OUT: false,
-
-    ENABLE_FEEDBACK_ANIMATION: false, // Enables feedback star animation.
-
-    FILM_STRIP_MAX_HEIGHT: 120,
-
-    /**
-     * Whether to only show the filmstrip (and hide the toolbar).
-     */
-    filmStripOnly: false,
-
-    GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
-
-    /**
-     * Hide the invite prompt in the header when alone in the meeting.
-     */
-    HIDE_INVITE_MORE_HEADER: true,
-
-    holisteInterface: false,
-
-    INITIAL_TOOLBAR_TIMEOUT: 20000,
-    JITSI_WATERMARK_LINK: 'https://veksti.com.br',
-
-    LANG_DETECTION: true, // Allow i18n to detect the system language
-    LIVE_STREAMING_HELP_LINK: 'https://veksti.com.br', // Documentation reference for the live streaming feature.
-    LOCAL_THUMBNAIL_RATIO: 16 / 9, // 16:9
-
-    /**
-     * Maximum coefficient of the ratio of the large video to the visible area
-     * after the large video is scaled to fit the window.
-     *
-     * @type {number}
-     */
-    MAXIMUM_ZOOMING_COEFFICIENT: 1.3,
-
-    /**
-     * Whether the mobile app Veksti Meet is to be promoted to participants
-     * attempting to join a conference in a mobile Web browser. If
-     * {@code undefined}, defaults to {@code true}.
-     *
-     * @type {boolean}
-     */
-    MOBILE_APP_PROMO: true,
-
-    NATIVE_APP_NAME: 'Veksti Meet',
-
-    // Names of browsers which should show a warning stating the current browser
-    // has a suboptimal experience. Browsers which are not listed as optimal or
-    // unsupported are considered suboptimal. Valid values are:
-    // chrome, chromium, edge, electron, firefox, nwjs, opera, safari
-    OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari' ],
-
-    POLICY_LOGO: null,
-    PROVIDER_NAME: 'Veksti',
-
-    /**
-     * If true, will display recent list
-     *
-     * @type {boolean}
-     */
-    RECENT_LIST_ENABLED: false,
-    REMOTE_THUMBNAIL_RATIO: 1, // 1:1
-
-    SETTINGS_SECTIONS: [ 'devices', 'language', 'profile' ],
-    SHOW_BRAND_WATERMARK: false,
-
-    /**
-    * Decides whether the chrome extension banner should be rendered on the landing page and during the meeting.
-    * If this is set to false, the banner will not be rendered at all. If set to true, the check for extension(s)
-    * being already installed is done before rendering.
-    */
-    SHOW_CHROME_EXTENSION_BANNER: false,
-
-    SHOW_DEEP_LINKING_IMAGE: false,
-    SHOW_JITSI_WATERMARK: true,
-    SHOW_POWERED_BY: false,
-    SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-    SHOW_WATERMARK_FOR_GUESTS: true, // if watermark is disabled by default, it can be shown only for guests
-
-    /*
-     * If indicated some of the error dialogs may point to the support URL for
-     * help.
-     */
-    SUPPORT_URL: 'https://veksti.com.br',
-
-    TOOLBAR_ALWAYS_VISIBLE: false,
-
-    /**
-     * The name of the toolbar buttons to display in the toolbar, including the
-     * "More actions" menu. If present, the button will display. Exceptions are
-     * "livestreaming" and "recording" which also require being a moderator and
-     * some values in config.js to be enabled. Also, the "profile" button will
-     * not display for users with a JWT.
-     * Notes:
-     * - it's impossible to choose which buttons go in the "More actions" menu
-     * - it's impossible to control the placement of buttons
-     * - 'desktop' controls the "Share your screen" button
-     */
-    TOOLBAR_BUTTONS: [
-        'microphone',
-        'camera',
-        'closedcaptions',
-        'desktop',
-        'fullscreen',
-        'fodeviceselection',
-        'hangup',
-        'profile',
-        'settings',
-        'videoquality',
-        'filmstrip',
-        'tileview'
-    ],
-
-    TOOLBAR_TIMEOUT: 4000,
-
-    // Browsers, in addition to those which do not fully support WebRTC, that
-    // are not supported and should show the unsupported browser page.
-    UNSUPPORTED_BROWSERS: [],
-
-    /**
-     * Whether to show thumbnails in filmstrip as a column instead of as a row.
-     */
-    VERTICAL_FILMSTRIP: true,
-
-    // Determines how the video would fit the screen. 'both' would fit the whole
-    // screen, 'height' would fit the original video height to the height of the
-    // screen, 'width' would fit the original video width to the width of the
-    // screen respecting ratio.
-    VIDEO_LAYOUT_FIT: 'both',
-
-    /**
-     * If true, hides the video quality label indicating the resolution status
-     * of the current large video.
-     *
-     * @type {boolean}
-     */
-    VIDEO_QUALITY_LABEL_DISABLED: false,
-
-    /**
-     * When enabled, the kick participant button will not be presented for users without a JWT
-     */
-    HIDE_KICK_BUTTON_FOR_GUESTS: true,
-
-    /**
-     * How many columns the tile view can expand to. The respected range is
-     * between 1 and 5.
-     */
-    // TILE_VIEW_MAX_COLUMNS: 5,
-
-    /**
-     * Specify custom URL for downloading android mobile app.
-     */
-    // MOBILE_DOWNLOAD_LINK_ANDROID: 'https://play.google.com/store/apps/details?id=org.jitsi.meet',
-
-    /**
-     * Specify URL for downloading ios mobile app.
-     */
-    // MOBILE_DOWNLOAD_LINK_IOS: 'https://itunes.apple.com/us/app/jitsi-meet/id1165103905',
-
-    /**
-     * Specify Firebase dynamic link properties for the mobile apps.
-     */
-    // MOBILE_DYNAMIC_LINK: {
-    //    APN: 'org.jitsi.meet',
-    //    APP_CODE: 'w2atb',
-    //    CUSTOM_DOMAIN: undefined,
-    //    IBI: 'com.atlassian.JitsiMeet.ios',
-    //    ISI: '1165103905'
-    // },
-
-    /**
-     * Specify mobile app scheme for opening the app from the mobile browser.
-     */
-    APP_SCHEME: 'org.jitsi.meet',
-
-    /**
-     * Specify the Android app package name.
-     */
-    ANDROID_APP_PACKAGE: 'br.com.veksti.meet',
-
-    /**
-     * Override the behavior of some notifications to remain displayed until
-     * explicitly dismissed through a user action. The value is how long, in
-     * milliseconds, those notifications should remain displayed.
-     */
-    // ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 15000,
-
-    // List of undocumented settings
-    /**
-     INDICATOR_FONT_SIZES
-     PHONE_NUMBER_REGEX
-    */
-
-    // Allow all above example options to include a trailing comma and
-    // prevent fear when commenting out the last value.
-    // eslint-disable-next-line sort-keys
-    makeJsonParserHappy: 'even if last key had a trailing comma'
-
-    // No configuration value should follow this line.
+/**
+ * The CSS class to apply to the root element of the conference so CSS can
+ * modify the app layout.
+ *
+ * @private
+ * @type {Object}
+ */
+const LAYOUT_CLASSNAMES = {
+    [LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW]: 'horizontal-filmstrip',
+    [LAYOUTS.TILE_VIEW]: 'tile-view',
+    [LAYOUTS.VERTICAL_FILMSTRIP_VIEW]: 'vertical-filmstrip'
 };
 
-/* eslint-enable no-unused-vars, no-var, max-len */
+/**
+ * The type of the React {@code Component} props of {@link Conference}.
+ */
+type Props = AbstractProps & {
+
+    /**
+     * Whether the local participant is recording the conference.
+     */
+    _iAmRecorder: boolean,
+
+    /**
+     * Returns true if the 'lobby screen' is visible.
+     */
+    _isLobbyScreenVisible: boolean,
+
+    /**
+     * The CSS class to apply to the root of {@link Conference} to modify the
+     * application layout.
+     */
+    _layoutClassName: string,
+
+    /**
+     * Name for this conference room.
+     */
+    _roomName: string,
+
+    /**
+     * If prejoin page is visible or not.
+     */
+    _showPrejoin: boolean,
+
+    dispatch: Function,
+    t: Function
+}
+
+/**
+ * The conference page of the Web application.
+ */
+class Conference extends AbstractConference<Props, *> {
+    _onFullScreenChange: Function;
+    _onShowToolbar: Function;
+    _originalOnShowToolbar: Function;
+
+    /**
+     * Initializes a new Conference instance.
+     *
+     * @param {Object} props - The read-only properties with which the new
+     * instance is to be initialized.
+     */
+    constructor(props) {
+        super(props);
+
+        // Throttle and bind this component's mousemove handler to prevent it
+        // from firing too often.
+        this._originalOnShowToolbar = this._onShowToolbar;
+        this._onShowToolbar = _.throttle(
+            () => this._originalOnShowToolbar(),
+            100,
+            {
+                leading: true,
+                trailing: false
+            });
+
+        // Bind event handler so it is only bound once for every instance.
+        this._onFullScreenChange = this._onFullScreenChange.bind(this);
+    }
+
+    /**
+     * Start the connection and get the UI ready for the conference.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
+        this._start();
+    }
+
+    /**
+     * Calls into legacy UI to update the application layout, if necessary.
+     *
+     * @inheritdoc
+     * returns {void}
+     */
+    componentDidUpdate(prevProps) {
+        if (this.props._shouldDisplayTileView
+            === prevProps._shouldDisplayTileView) {
+            return;
+        }
+
+        // TODO: For now VideoLayout is being called as LargeVideo and Filmstrip
+        // sizing logic is still handled outside of React. Once all components
+        // are in react they should calculate size on their own as much as
+        // possible and pass down sizings.
+        VideoLayout.refreshLayout();
+    }
+
+    /**
+     * Disconnect from the conference when component will be
+     * unmounted.
+     *
+     * @inheritdoc
+     */
+    componentWillUnmount() {
+        APP.UI.unbindEvents();
+
+        FULL_SCREEN_EVENTS.forEach(name =>
+            document.removeEventListener(name, this._onFullScreenChange));
+
+        APP.conference.isJoined() && this.props.dispatch(disconnect());
+    }
+
+    /**
+     * Implements React's {@link Component#render()}.
+     *
+     * @inheritdoc
+     * @returns {ReactElement}
+     */
+    render() {
+        const {
+            // XXX The character casing of the name filmStripOnly utilized by
+            // interfaceConfig is obsolete but legacy support is required.
+            filmStripOnly: filmstripOnly,
+            holisteInterface
+        } = interfaceConfig;
+        const {
+            _iAmRecorder,
+            _isLobbyScreenVisible,
+            _layoutClassName,
+            _showPrejoin
+        } = this.props;
+        const hideLabels = filmstripOnly || _iAmRecorder;
+
+        return (
+            <div
+                className = { _layoutClassName }
+                id = 'videoconference_page'
+                onMouseMove = { this._onShowToolbar }>
+
+                { holisteInterface || <Notice /> }
+                { holisteInterface || <Subject /> }
+                { holisteInterface || <InviteMore /> }
+                <div id = 'videospace'>
+                    <LargeVideo />
+                    { holisteInterface || <KnockingParticipantList />}
+                    <Filmstrip filmstripOnly = { filmstripOnly } />
+                    { hideLabels || holisteInterface || <Labels /> }
+                </div>
+
+                { filmstripOnly || _showPrejoin || _isLobbyScreenVisible || <Toolbox /> }
+                { filmstripOnly || holisteInterface || <Chat /> }
+
+                { holisteInterface || this.renderNotificationsContainer() }
+
+                { holisteInterface || <CalleeInfoContainer />}
+
+                { !filmstripOnly && _showPrejoin && <Prejoin />}
+            </div>
+        );
+    }
+
+    /**
+     * Updates the Redux state when full screen mode has been enabled or
+     * disabled.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onFullScreenChange() {
+        this.props.dispatch(fullScreenChanged(APP.UI.isFullScreen()));
+    }
+
+    /**
+     * Displays the toolbar.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShowToolbar() {
+        this.props.dispatch(showToolbox());
+    }
+
+    /**
+     * Until we don't rewrite UI using react components
+     * we use UI.start from old app. Also method translates
+     * component right after it has been mounted.
+     *
+     * @inheritdoc
+     */
+    _start() {
+        APP.UI.start();
+
+        APP.UI.registerListeners();
+        APP.UI.bindEvents();
+
+        FULL_SCREEN_EVENTS.forEach(name =>
+            document.addEventListener(name, this._onFullScreenChange));
+
+        const { dispatch, t } = this.props;
+
+        dispatch(connect());
+
+        maybeShowSuboptimalExperienceNotification(dispatch, t);
+
+        interfaceConfig.filmStripOnly
+            && dispatch(setToolboxAlwaysVisible(true));
+    }
+}
+
+/**
+ * Maps (parts of) the Redux state to the associated props for the
+ * {@code Conference} component.
+ *
+ * @param {Object} state - The Redux state.
+ * @private
+ * @returns {Props}
+ */
+function _mapStateToProps(state) {
+    return {
+        ...abstractMapStateToProps(state),
+        _iAmRecorder: state['features/base/config'].iAmRecorder,
+        _isLobbyScreenVisible: state['features/base/dialog']?.component === LobbyScreen,
+        _layoutClassName: LAYOUT_CLASSNAMES[getCurrentLayout(state)],
+        _roomName: getConferenceNameForTitle(state),
+        _showPrejoin: isPrejoinPageVisible(state)
+    };
+}
+
+export default reactReduxConnect(_mapStateToProps)(translate(Conference));
