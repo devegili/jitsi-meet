@@ -353,7 +353,7 @@ class Toolbox extends Component<Props, State> {
                 id = 'new-toolbox'
                 onMouseOut = { this._onMouseOut }
                 onMouseOver = { this._onMouseOver }>
-                <div className = 'toolbox-background' />
+                { interfaceConfig.holisteInterface || <div className = 'toolbox-background' />}
                 { this._renderToolboxContent()}
             </div>
         );
@@ -1203,7 +1203,7 @@ class Toolbox extends Component<Props, State> {
 
         const movedButtons = [];
 
-        if (buttonsLeft.length > maxNumberOfButtonsPerGroup) {
+        if (buttonsLeft.length > maxNumberOfButtonsPerGroup && !interfaceConfig.holisteInterface) {
             movedButtons.push(...buttonsLeft.splice(
                 maxNumberOfButtonsPerGroup,
                 buttonsLeft.length - maxNumberOfButtonsPerGroup));
@@ -1212,7 +1212,7 @@ class Toolbox extends Component<Props, State> {
             }
         }
 
-        if (buttonsRight.length > maxNumberOfButtonsPerGroup) {
+        if (buttonsRight.length > maxNumberOfButtonsPerGroup && !interfaceConfig.holisteInterface) {
             if (buttonsRight.indexOf('overflowmenu') === -1) {
                 buttonsRight.unshift('overflowmenu');
             }
