@@ -106,6 +106,8 @@ var interfaceConfig = {
      */
     HIDE_INVITE_MORE_HEADER: true,
 
+    holisteInterface: false,
+
     INITIAL_TOOLBAR_TIMEOUT: 20000,
     JITSI_WATERMARK_LINK: 'https://veksti.com.br',
 
@@ -136,7 +138,7 @@ var interfaceConfig = {
     // has a suboptimal experience. Browsers which are not listed as optimal or
     // unsupported are considered suboptimal. Valid values are:
     // chrome, chromium, edge, electron, firefox, nwjs, opera, safari
-    OPTIMAL_BROWSERS: ['chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari'],
+    OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari' ],
 
     POLICY_LOGO: null,
     PROVIDER_NAME: 'Veksti',
@@ -149,7 +151,7 @@ var interfaceConfig = {
     RECENT_LIST_ENABLED: false,
     REMOTE_THUMBNAIL_RATIO: 1, // 1:1
 
-    SETTINGS_SECTIONS: ['devices', 'language', 'profile'],
+    SETTINGS_SECTIONS: [ 'devices', 'language', 'profile' ],
     SHOW_BRAND_WATERMARK: false,
 
     /**
