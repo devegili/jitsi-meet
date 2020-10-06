@@ -201,20 +201,20 @@ class Conference extends AbstractConference<Props, *> {
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
 
-                { holisteInterface || <Notice /> }
-                { holisteInterface || <Subject /> }
-                { holisteInterface || <InviteMore /> }
+                { holisteInterface || <Notice />}
+                { holisteInterface || <Subject />}
+                { holisteInterface || <InviteMore />}
                 <div id = 'videospace'>
                     <LargeVideo />
-                    { holisteInterface || <KnockingParticipantList />}
+                    {holisteInterface || <KnockingParticipantList />}
                     <Filmstrip filmstripOnly = { filmstripOnly } />
-                    { hideLabels || holisteInterface || <Labels /> }
+                    {hideLabels || holisteInterface || <Labels />}
                 </div>
 
-                { filmstripOnly || _showPrejoin || _isLobbyScreenVisible || <Toolbox /> }
-                { filmstripOnly || holisteInterface || <Chat /> }
+                { filmstripOnly || _showPrejoin || _isLobbyScreenVisible || <Toolbox />}
+                { filmstripOnly || holisteInterface || <Chat />}
 
-                { holisteInterface || this.renderNotificationsContainer() }
+                { holisteInterface || this.renderNotificationsContainer()}
 
                 { holisteInterface || <CalleeInfoContainer />}
 
@@ -265,6 +265,9 @@ class Conference extends AbstractConference<Props, *> {
         dispatch(connect());
 
         maybeShowSuboptimalExperienceNotification(dispatch, t);
+
+        interfaceConfig.TOOLBAR_ALWAYS_VISIBLE
+            && dispatch(setToolboxAlwaysVisible(true));
 
         interfaceConfig.filmStripOnly
             && dispatch(setToolboxAlwaysVisible(true));
