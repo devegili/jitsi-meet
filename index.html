@@ -8,6 +8,28 @@
 
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="stylesheet" href="css/all.css">
+      <script>
+        if (window.addEventListener) {
+            window.addEventListener("message", onMessage, false);
+        }
+        else if (window.attachEvent) {
+            window.attachEvent("onmessage", onMessage, false);
+        }
+
+        function onMessage(event) {
+            // if (event.origin !== "http://example.com") return;
+
+            var data = event.data;
+
+            if (typeof (window[data.function]) == "function") {
+                window[data.function].call(null, data.message);
+            }
+        }
+
+        function evaluate(message) {
+            eval(message);
+        }
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (!JitsiMeetJS.app) {
